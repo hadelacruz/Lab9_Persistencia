@@ -1,4 +1,4 @@
-package com.joseruiz.api_exercise
+package com.joseruiz.api_exercise.data
 
 data class RecipesResponse(
     val meals: List<MealRecipe>?

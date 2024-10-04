@@ -1,11 +1,17 @@
-package com.joseruiz.api_exercise
+package com.joseruiz.api_exercise.api
 
+import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import android.util.Log
+import com.joseruiz.api_exercise.data.AppDatabase
+import com.joseruiz.api_exercise.data.CategoriesResponse
+import com.joseruiz.api_exercise.data.Category
+import com.joseruiz.api_exercise.data.Meal
+import com.joseruiz.api_exercise.data.MealRecipe
 
 
 class MainViewModel: ViewModel() {
@@ -21,14 +27,23 @@ class MainViewModel: ViewModel() {
     private val _recipeState = mutableStateOf(RecipeState())
     val recipesState: State<RecipeState> = _recipeState
 
-    init {
-        fetchCategories()
-    }
+    public fun fetchCategories(context: Context){
+        val database = AppDatabase.getDatabase(context)
+        val categoryDao = database.categoryDao()
 
-    private fun fetchCategories(){
         viewModelScope.launch { // Trabaja como mi await
             try{
-                val response = recipeService.getCategories()
+                val response: CategoriesResponse
+
+                if (checkForInternet(context)){
+                    Log.i("SI HAY INTERNET", "SI HAY INTERNET")
+                    response = recipeService.getCategories()
+                }else{
+                    Log.i("NO HAY INTERNET", "NO HAY INTERNET")
+                    val categoriesFromDb = categoryDao.getAllCategories()
+                    response = CategoriesResponse(categoriesFromDb)
+                }
+
                 _categorieState.value = _categorieState.value.copy(
                     list = response.categories
                     , loading = false

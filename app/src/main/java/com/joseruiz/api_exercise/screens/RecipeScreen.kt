@@ -1,7 +1,6 @@
-package com.joseruiz.api_exercise
+package com.joseruiz.api_exercise.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
+import com.joseruiz.api_exercise.api.MainViewModel
+import com.joseruiz.api_exercise.data.MealRecipe
+import com.joseruiz.api_exercise.data.toIngredientList
 
 @Composable
 fun RecipeScreen(idMeal: String?, modifier: Modifier = Modifier) {

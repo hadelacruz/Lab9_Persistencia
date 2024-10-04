@@ -1,5 +1,8 @@
-package com.joseruiz.api_exercise
+package com.joseruiz.api_exercise.api
 
+import com.joseruiz.api_exercise.data.CategoriesResponse
+import com.joseruiz.api_exercise.data.MealsResponse
+import com.joseruiz.api_exercise.data.RecipesResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -13,7 +16,7 @@ val recipeService = retrofit.create(ApiService::class.java)
 
 interface ApiService{
     @GET("categories.php")
-    suspend fun getCategories():CategoriesResponse
+    suspend fun getCategories(): CategoriesResponse
 
     @GET("filter.php")
     suspend fun getMeals(@Query("c") category: String): MealsResponse

@@ -11,7 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.joseruiz.api_exercise.screens.CategoryScreen
+import com.joseruiz.api_exercise.screens.MealScreen
+import com.joseruiz.api_exercise.screens.RecipeScreen
 import com.joseruiz.api_exercise.ui.theme.API_EXERCISETheme
+
+// Se valida que si el dispositivo tiene conexión a internet que consuma el API, pero si no, que utilice
+// la información que esta guardada en la base de datos.
+
+// DAO: es una interfaz donde defines cómo interactuarás con los datos (consultas, inserciones, actualizaciones...)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
