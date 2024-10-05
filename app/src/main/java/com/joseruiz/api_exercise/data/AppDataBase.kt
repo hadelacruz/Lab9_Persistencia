@@ -14,7 +14,6 @@ import androidx.room.TypeConverters
 * 3. Recipe (Pero tiene llaves foraneas)
 * */
 @Database(entities = [Category::class], version = 2)
-@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
 

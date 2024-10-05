@@ -30,31 +30,25 @@ import com.joseruiz.api_exercise.api.checkForInternet
 import com.joseruiz.api_exercise.data.Category
 
 @Composable
-fun CategoryScreen(modifier: Modifier = Modifier, navController: NavController){
+fun CategoryScreen(modifier: Modifier = Modifier, navController: NavController) {
     // Se inicializa el componente
     val categoryViewModel: MainViewModel = viewModel()
-    // Se realiza la llamada al metodo que trae las categorias
-    val context = LocalContext.current
-    categoryViewModel.fetchCategories(context)
-
     val viewstate by categoryViewModel.categoriesState
 
-    Box(modifier = Modifier.fillMaxSize()){
-        when{
+    Box(modifier = Modifier.fillMaxSize()) {
+        when {
             viewstate.loading -> {
-                CircularProgressIndicator(modifier.align(Alignment.Center))
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
-
-            viewstate.error != null ->{
+            viewstate.error != null -> {
                 Text("ERROR OCURRED")
             }
-
             else -> {
+                // Renderiza la lista de categorías aquí
                 CategoryScreen(categories = viewstate.list, navController)
             }
         }
     }
-
 }
 
 @Composable

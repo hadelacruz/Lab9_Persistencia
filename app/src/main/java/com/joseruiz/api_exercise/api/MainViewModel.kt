@@ -7,14 +7,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import android.util.Log
-import com.joseruiz.api_exercise.data.AppDatabase
-import com.joseruiz.api_exercise.data.CategoriesResponse
 import com.joseruiz.api_exercise.data.Category
+import com.joseruiz.api_exercise.data.CategoryDao
+import com.joseruiz.api_exercise.data.CategoryRepository
 import com.joseruiz.api_exercise.data.Meal
 import com.joseruiz.api_exercise.data.MealRecipe
 
-
-class MainViewModel: ViewModel() {
+class MainViewModel(
+    private val categoryDao: CategoryDao,
+    private val apiService: ApiService,
+    private val context: Context
+): ViewModel() {
     // Variables para categories
     private val _categorieState = mutableStateOf(CategoryState())
     val categoriesState: State<CategoryState> = _categorieState
@@ -27,43 +30,24 @@ class MainViewModel: ViewModel() {
     private val _recipeState = mutableStateOf(RecipeState())
     val recipesState: State<RecipeState> = _recipeState
 
-    public fun fetchCategories(context: Context) {
-        val database = AppDatabase.getDatabase(context)
-        val categoryDao = database.categoryDao()
+    //Llamada al context del categoryRepository
+    private val categoryRepository = CategoryRepository(categoryDao, apiService, context)
 
+    init {
+        fetchCategories()
+    }
+
+    public fun fetchCategories() {
         viewModelScope.launch {
-            try {
-                val response: CategoriesResponse
-
-                if (checkForInternet(context)) {
-                    Log.i("SI HAY INTERNET", "SI HAY INTERNET")
-                    // Obtener los datos desde la API
-                    response = recipeService.getCategories()
-                    // Insertar las categorías en la base de datos (solamente la lista de categorías)
-                    categoryDao.insertCategory(response.categories)
-                } else {
-                    Log.i("NO HAY INTERNET", "NO HAY INTERNET")
-                    // Obtener las categorías desde la base de datos
-                    val categoriesFromDb = categoryDao.getAllCategories()
-                    // Convertir la lista a CategoriesResponse
-                    response = CategoriesResponse(categoriesFromDb)
-                }
-
+            categoryRepository.getCategories().collect { categories ->
                 _categorieState.value = _categorieState.value.copy(
-                    list = response.categories,
+                    list = categories,
                     loading = false,
                     error = null
-                )
-            } catch (e: Exception) {
-                _categorieState.value = _categorieState.value.copy(
-                    loading = false,
-                    error = "Error fetching Categories ${e.message}"
                 )
             }
         }
     }
-
-
 
     data class CategoryState(
         val loading: Boolean = true
