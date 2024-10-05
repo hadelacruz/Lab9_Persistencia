@@ -13,7 +13,7 @@ import androidx.room.TypeConverters
 * 2. Meal
 * 3. Recipe (Pero tiene llaves foraneas)
 * */
-@Database(entities = [Category::class], version = 2)
+@Database(entities = [Category::class, Meal::class], version = 5)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun mealDao(): MealDao
@@ -28,7 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "recipe_database"
-                ).build()
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 instance
             }

@@ -1,5 +1,6 @@
 package com.joseruiz.api_exercise.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -35,13 +36,12 @@ import com.joseruiz.api_exercise.data.MealDao
 
 @Composable
 fun MealScreen(categoryName: String?, modifier: Modifier = Modifier, navController: NavController) {
-    //val mealViewModel: MainViewModel = viewModel()
 
     val context = LocalContext.current
     val mealDao: MealDao = AppDatabase.getDatabase(context).mealDao()
     val apiService = recipeService
 
-    // Inicializar el ViewModel directamente
+    // Inicializar el ViewModel directamente con un ViewModelProvider.Factory
     val mealViewModel: MainViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -49,6 +49,7 @@ fun MealScreen(categoryName: String?, modifier: Modifier = Modifier, navControll
             }
         }
     )
+
 
     // Llama a fetchMeals si categoryName no es nulo
     if (categoryName != null) {
@@ -71,6 +72,7 @@ fun MealScreen(categoryName: String?, modifier: Modifier = Modifier, navControll
         }
     }
 }
+
 
 @Composable
 fun MealScreen(meals: List<Meal>, navController: NavController){ //List<Recipe>

@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import android.util.Log
 import com.joseruiz.api_exercise.data.Category
-import com.joseruiz.api_exercise.data.CategoryDao
 import com.joseruiz.api_exercise.data.CategoryRepository
 import com.joseruiz.api_exercise.data.Meal
 import com.joseruiz.api_exercise.data.MealRecipe
@@ -17,7 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class MainViewModel(
-    val categoryDao: CategoryDao,
+    val dao: Any,
     val apiService: ApiService,
     val context: Context
 ): ViewModel() {
@@ -34,7 +33,7 @@ class MainViewModel(
     val recipesState: State<RecipeState> = _recipeState
 
     //Llamada al context del categoryRepository
-    private val categoryRepository = CategoryRepository(categoryDao, apiService, context)
+    private val categoryRepository = CategoryRepository(dao, apiService, context)
 
     init {
         fetchCategories()
@@ -89,10 +88,8 @@ class MainViewModel(
     private fun fetchRecipes(idMeal: String) {
         viewModelScope.launch {
             try {
-                val response = recipeService.getRecipes(idMeal) // Usa idMeal en vez de "52772"
-                Log.i("IDMEAL*************", response.toString())
+                val response = recipeService.getRecipes(idMeal)
 
-                // Aquí asumiendo que solo hay una receta y que estás buscando en meals
                 val meals = response.meals ?: emptyList() // Maneja el caso de null
 
                 _recipeState.value = _recipeState.value.copy(
