@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    kotlin("kapt")
+    id("com.google.devtools.ksp") version "1.9.20-1.0.14"
 }
 
 android {
@@ -78,7 +78,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.runtime.ktx)
     // Room
-    implementation ("androidx.room:room-runtime:2.5.1") // Usa la última versión
-    kapt ("androidx.room:room-compiler:2.5.1")
-    implementation ("androidx.room:room-ktx:2.5.1")
+    implementation("androidx.room:room-runtime:2.5.1") // Asegúrate de que esta sea la última versión
+    ksp("androidx.room:room-compiler:2.5.1") // Cambia a KSP
+    implementation("androidx.room:room-ktx:2.5.1")
 }

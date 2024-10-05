@@ -17,18 +17,38 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.joseruiz.api_exercise.api.MainViewModel
+import com.joseruiz.api_exercise.api.recipeService
+import com.joseruiz.api_exercise.data.AppDatabase
+import com.joseruiz.api_exercise.data.CategoryDao
 import com.joseruiz.api_exercise.data.Meal
+import com.joseruiz.api_exercise.data.MealDao
 
 @Composable
 fun MealScreen(categoryName: String?, modifier: Modifier = Modifier, navController: NavController) {
-    val mealViewModel: MainViewModel = viewModel()
+    //val mealViewModel: MainViewModel = viewModel()
+
+    val context = LocalContext.current
+    val mealDao: MealDao = AppDatabase.getDatabase(context).mealDao()
+    val apiService = recipeService
+
+    // Inicializar el ViewModel directamente
+    val mealViewModel: MainViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return MainViewModel(mealDao, apiService, context) as T
+            }
+        }
+    )
 
     // Llama a fetchMeals si categoryName no es nulo
     if (categoryName != null) {

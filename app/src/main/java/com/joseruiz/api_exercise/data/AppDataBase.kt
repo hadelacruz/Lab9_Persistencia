@@ -16,6 +16,7 @@ import androidx.room.TypeConverters
 @Database(entities = [Category::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
+    abstract fun mealDao(): MealDao
 
     companion object {
         @Volatile

@@ -12,15 +12,18 @@ import com.joseruiz.api_exercise.data.CategoryDao
 import com.joseruiz.api_exercise.data.CategoryRepository
 import com.joseruiz.api_exercise.data.Meal
 import com.joseruiz.api_exercise.data.MealRecipe
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class MainViewModel(
-    private val categoryDao: CategoryDao,
-    private val apiService: ApiService,
-    private val context: Context
+    val categoryDao: CategoryDao,
+    val apiService: ApiService,
+    val context: Context
 ): ViewModel() {
     // Variables para categories
-    private val _categorieState = mutableStateOf(CategoryState())
-    val categoriesState: State<CategoryState> = _categorieState
+    private val _categoriesState = MutableStateFlow(CategoryState())
+    val categoriesState: StateFlow<CategoryState> = _categoriesState.asStateFlow()
 
     // Variables para meals
     private val _mealState = mutableStateOf(MealState())
@@ -40,7 +43,7 @@ class MainViewModel(
     public fun fetchCategories() {
         viewModelScope.launch {
             categoryRepository.getCategories().collect { categories ->
-                _categorieState.value = _categorieState.value.copy(
+                _categoriesState.value = _categoriesState.value.copy(
                     list = categories,
                     loading = false,
                     error = null
