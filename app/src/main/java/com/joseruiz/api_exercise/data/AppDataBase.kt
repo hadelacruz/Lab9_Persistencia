@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
 /*
 * Entidades:
@@ -12,9 +13,9 @@ import androidx.room.RoomDatabase
 * 2. Meal
 * 3. Recipe (Pero tiene llaves foraneas)
 * */
-@Database(entities = [Category::class, Meal::class], version = 1)
+@Database(entities = [Category::class], version = 2)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun recipeDao(): RecipeDao
     abstract fun categoryDao(): CategoryDao
 
     companion object {

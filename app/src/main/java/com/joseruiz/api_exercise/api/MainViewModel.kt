@@ -27,36 +27,43 @@ class MainViewModel: ViewModel() {
     private val _recipeState = mutableStateOf(RecipeState())
     val recipesState: State<RecipeState> = _recipeState
 
-    public fun fetchCategories(context: Context){
+    public fun fetchCategories(context: Context) {
         val database = AppDatabase.getDatabase(context)
         val categoryDao = database.categoryDao()
 
-        viewModelScope.launch { // Trabaja como mi await
-            try{
+        viewModelScope.launch {
+            try {
                 val response: CategoriesResponse
 
-                if (checkForInternet(context)){
+                if (checkForInternet(context)) {
                     Log.i("SI HAY INTERNET", "SI HAY INTERNET")
+                    // Obtener los datos desde la API
                     response = recipeService.getCategories()
-                }else{
+                    // Insertar las categorías en la base de datos (solamente la lista de categorías)
+                    categoryDao.insertCategory(response.categories)
+                } else {
                     Log.i("NO HAY INTERNET", "NO HAY INTERNET")
+                    // Obtener las categorías desde la base de datos
                     val categoriesFromDb = categoryDao.getAllCategories()
+                    // Convertir la lista a CategoriesResponse
                     response = CategoriesResponse(categoriesFromDb)
                 }
 
                 _categorieState.value = _categorieState.value.copy(
-                    list = response.categories
-                    , loading = false
-                    , error = null
+                    list = response.categories,
+                    loading = false,
+                    error = null
                 )
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 _categorieState.value = _categorieState.value.copy(
-                    loading = false
-                    , error = "Error fetching Categories ${e.message}"
+                    loading = false,
+                    error = "Error fetching Categories ${e.message}"
                 )
             }
-        } //End of viewModelScope
+        }
     }
+
+
 
     data class CategoryState(
         val loading: Boolean = true
