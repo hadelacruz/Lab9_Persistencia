@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
+import kotlinx.coroutines.flow.Flow
 
 // @Dao indica que esta interfaz contiene métodos de acceso a la base de datos
 
@@ -14,5 +15,5 @@ interface CategoryDao {
     suspend fun insertCategory(categories: List<Category>)
 
     @Query("SELECT * FROM Category")
-    suspend fun getAllCategories(): List<Category>
+    fun getAllCategories(): Flow<List<Category>>
 }

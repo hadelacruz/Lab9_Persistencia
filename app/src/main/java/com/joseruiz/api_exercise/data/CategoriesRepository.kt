@@ -17,14 +17,16 @@ class CategoryRepository(
             // Si hay internet, obtener de la API
             val categoriesFromApi = apiService.getCategories().categories
             // Insertar en la base de datos local
-            // categoryDao.insertCategory(categoriesFromApi)
+            categoryDao.insertCategory(categoriesFromApi)  // Asegúrate de que esto sea suspend
             // Emitir la lista de categorías obtenida de la API
             emit(categoriesFromApi)
         } else {
             // Si no hay internet, obtener de la base de datos local
-            val categoriesFromDb = categoryDao.getAllCategories()
-            emit(categoriesFromDb)
+            categoryDao.getAllCategories().collect { categoriesFromDb ->
+                emit(categoriesFromDb)
+            }
         }
     }
 }
+
 
