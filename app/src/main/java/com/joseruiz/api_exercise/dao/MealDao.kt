@@ -14,6 +14,6 @@ interface MealDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMeal(categories: List<Meal>)
 
-    @Query("SELECT * FROM Meal")
-    fun getAllMeals(): Flow<List<Meal>>
+    @Query("SELECT * FROM Meal WHERE category = :category")
+    fun getAllMeals(category: String): Flow<List<Meal>>
 }

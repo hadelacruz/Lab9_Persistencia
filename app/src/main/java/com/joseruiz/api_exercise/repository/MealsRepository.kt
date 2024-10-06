@@ -19,16 +19,28 @@ class MealsRepository(
     fun getMeals(categoryName: String): Flow<List<Meal>> = flow {
         if (checkForInternet(context)) {
             Log.i("SI hay internet", "Si hay internet")
-            // Si hay internet, obtener de la API
+            // Obtén las comidas de la API
             val mealsFromApi = apiService.getMeals(categoryName).meals
-            // Insertar en la base de datos local
-            mealDao.insertMeal(mealsFromApi)  // Asegúrate de que esto sea suspend
+
+            // Mapea la lista a una nueva lista de 'Meal' con la categoría establecida
+            val mealsWithCategory = mealsFromApi.map { meal ->
+                Meal(
+                    strMeal = meal.strMeal,
+                    strMealThumb = meal.strMealThumb,
+                    idMeal = meal.idMeal,
+                    category = categoryName
+                )
+            }
+
+            // Inserta la nueva lista en la base de datos
+            mealDao.insertMeal(mealsWithCategory)
+
             // Emitir la lista de categorías obtenida de la API
             emit(mealsFromApi)
         } else {
             Log.i("No hay internet", "no hay internet")
             // Si no hay internet, obtener de la base de datos local
-            mealDao.getAllMeals().collect { mealsFromDb ->
+            mealDao.getAllMeals(categoryName).collect { mealsFromDb ->
                 emit(mealsFromDb)
             }
         }

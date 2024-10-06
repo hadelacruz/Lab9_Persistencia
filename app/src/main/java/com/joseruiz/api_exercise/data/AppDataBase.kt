@@ -14,7 +14,7 @@ import com.joseruiz.api_exercise.dao.MealDao
 * 2. Meal
 * 3. Recipe (Pero tiene llaves foraneas)
 * */
-@Database(entities = [Category::class, Meal::class], version = 6)
+@Database(entities = [Category::class, Meal::class], version = 7)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun mealDao(): MealDao
@@ -29,7 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "recipe_database"
-                ).fallbackToDestructiveMigration().build()
+                ).build()
                 INSTANCE = instance
                 instance
             }

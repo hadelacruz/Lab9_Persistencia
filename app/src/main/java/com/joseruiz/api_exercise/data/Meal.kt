@@ -7,7 +7,8 @@ import androidx.room.PrimaryKey
 data class Meal(
     @PrimaryKey val strMeal: String,
     val strMealThumb: String,
-    val idMeal: String
+    val idMeal: String,
+    val category: String
 )
 
 data class MealsResponse(
