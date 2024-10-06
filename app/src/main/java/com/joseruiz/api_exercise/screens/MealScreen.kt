@@ -1,6 +1,5 @@
 package com.joseruiz.api_exercise.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -27,33 +26,29 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.joseruiz.api_exercise.api.MainViewModel
 import com.joseruiz.api_exercise.api.recipeService
 import com.joseruiz.api_exercise.data.AppDatabase
-import com.joseruiz.api_exercise.data.CategoryDao
 import com.joseruiz.api_exercise.data.Meal
-import com.joseruiz.api_exercise.data.MealDao
+import com.joseruiz.api_exercise.dao.MealDao
+import com.joseruiz.api_exercise.models.MealViewModel
 
 @Composable
 fun MealScreen(categoryName: String?, modifier: Modifier = Modifier, navController: NavController) {
-
     val context = LocalContext.current
     val mealDao: MealDao = AppDatabase.getDatabase(context).mealDao()
     val apiService = recipeService
 
-    // Inicializar el ViewModel directamente con un ViewModelProvider.Factory
-    val mealViewModel: MainViewModel = viewModel(
+    val mealViewModel: MealViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return MainViewModel(mealDao, apiService, context) as T
+                val nonNullCategoryName = categoryName ?: "Default Category"
+                return MealViewModel(mealDao, apiService, context, nonNullCategoryName) as T
             }
         }
     )
 
-
-    // Llama a fetchMeals si categoryName no es nulo
     if (categoryName != null) {
-        mealViewModel.onCategoryClick(categoryName)
+        mealViewModel.fetchMeals(categoryName)
     }
 
     val viewstate by mealViewModel.mealsState

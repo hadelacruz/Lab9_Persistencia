@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import com.joseruiz.api_exercise.dao.CategoryDao
+import com.joseruiz.api_exercise.dao.MealDao
 
 /*
 * Entidades:
@@ -13,7 +14,7 @@ import androidx.room.TypeConverters
 * 2. Meal
 * 3. Recipe (Pero tiene llaves foraneas)
 * */
-@Database(entities = [Category::class, Meal::class], version = 5)
+@Database(entities = [Category::class, Meal::class], version = 6)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun mealDao(): MealDao

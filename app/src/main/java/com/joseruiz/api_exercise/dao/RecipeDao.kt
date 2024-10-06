@@ -1,4 +1,4 @@
-package com.joseruiz.api_exercise.data
+package com.joseruiz.api_exercise.dao
 
 import androidx.room.*
 

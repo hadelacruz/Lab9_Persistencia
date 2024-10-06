@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import com.joseruiz.api_exercise.api.MainViewModel
+import com.joseruiz.api_exercise.models.MainViewModel
 import com.joseruiz.api_exercise.data.MealRecipe
 import com.joseruiz.api_exercise.data.toIngredientList
 

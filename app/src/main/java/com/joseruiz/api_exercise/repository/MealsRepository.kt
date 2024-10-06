@@ -1,36 +1,36 @@
-package com.joseruiz.api_exercise.data
+package com.joseruiz.api_exercise.repository
 
 import android.content.Context
 import android.util.Log
 import com.joseruiz.api_exercise.api.ApiService
 import com.joseruiz.api_exercise.api.checkForInternet
+import com.joseruiz.api_exercise.data.Meal
+import com.joseruiz.api_exercise.dao.MealDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class CategoryRepository(
+class MealsRepository(
     private val dao: Any,
     private val apiService: ApiService,
     private val context: Context
 ) {
-    val categoryDao = dao as CategoryDao
+    val mealDao = dao as MealDao
     // Obteniendo categorías ya sea de la API o de la base de datos local
-    fun getCategories(): Flow<List<Category>> = flow {
+    fun getMeals(categoryName: String): Flow<List<Meal>> = flow {
         if (checkForInternet(context)) {
             Log.i("SI hay internet", "Si hay internet")
             // Si hay internet, obtener de la API
-            val categoriesFromApi = apiService.getCategories().categories
+            val mealsFromApi = apiService.getMeals(categoryName).meals
             // Insertar en la base de datos local
-            categoryDao.insertCategory(categoriesFromApi)  // Asegúrate de que esto sea suspend
+            mealDao.insertMeal(mealsFromApi)  // Asegúrate de que esto sea suspend
             // Emitir la lista de categorías obtenida de la API
-            emit(categoriesFromApi)
+            emit(mealsFromApi)
         } else {
             Log.i("No hay internet", "no hay internet")
             // Si no hay internet, obtener de la base de datos local
-            categoryDao.getAllCategories().collect { categoriesFromDb ->
-                emit(categoriesFromDb)
+            mealDao.getAllMeals().collect { mealsFromDb ->
+                emit(mealsFromDb)
             }
         }
     }
 }
-
-
