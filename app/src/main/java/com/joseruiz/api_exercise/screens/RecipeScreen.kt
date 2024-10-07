@@ -18,19 +18,39 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
+import com.joseruiz.api_exercise.api.recipeService
+import com.joseruiz.api_exercise.dao.MealDao
+import com.joseruiz.api_exercise.dao.RecipeDao
+import com.joseruiz.api_exercise.data.AppDatabase
 import com.joseruiz.api_exercise.models.MainViewModel
 import com.joseruiz.api_exercise.data.MealRecipe
 import com.joseruiz.api_exercise.data.toIngredientList
+import com.joseruiz.api_exercise.models.MealViewModel
+import com.joseruiz.api_exercise.models.RecipeViewModel
 
 @Composable
 fun RecipeScreen(idMeal: String?, modifier: Modifier = Modifier) {
     // Se inicializa el ViewModel
-    val recipeViewModel: MainViewModel = viewModel()
+    val context = LocalContext.current
+    val recipeDao: RecipeDao = AppDatabase.getDatabase(context).recipeDao()
+    val apiService = recipeService
+
+    val recipeViewModel: RecipeViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val nonNullIdMeal = idMeal ?: "Default Id"
+                return RecipeViewModel(recipeDao, apiService, context, nonNullIdMeal) as T
+            }
+        }
+    )
 
     if (idMeal != null) {
         recipeViewModel.onRecipeClick(idMeal)
@@ -44,7 +64,7 @@ fun RecipeScreen(idMeal: String?, modifier: Modifier = Modifier) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
             viewState.error != null -> {
-                Text("ERROR OCCURRED RECIPE: ${viewState.error}", modifier = Modifier.align(Alignment.Center))
+                Text("RECIPE ERROR OCCURRED RECIPE: ${viewState.error}", modifier = Modifier.align(Alignment.Center))
             }
             viewState.list.isNullOrEmpty() -> { // Manejo de lista nula o vacía
                 Text("No recipes found.", modifier = Modifier.align(Alignment.Center))

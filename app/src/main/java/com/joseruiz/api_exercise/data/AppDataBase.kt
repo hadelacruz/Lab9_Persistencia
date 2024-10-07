@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.joseruiz.api_exercise.dao.CategoryDao
 import com.joseruiz.api_exercise.dao.MealDao
+import com.joseruiz.api_exercise.dao.RecipeDao
 
 /*
 * Entidades:
@@ -14,10 +15,11 @@ import com.joseruiz.api_exercise.dao.MealDao
 * 2. Meal
 * 3. Recipe (Pero tiene llaves foraneas)
 * */
-@Database(entities = [Category::class, Meal::class], version = 7)
+@Database(entities = [Category::class, Meal::class,MealRecipe::class ], version = 8)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun mealDao(): MealDao
+    abstract fun recipeDao(): RecipeDao
 
     companion object {
         @Volatile

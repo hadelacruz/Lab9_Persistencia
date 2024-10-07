@@ -25,8 +25,8 @@ class MainViewModel(
     val categoriesState: StateFlow<CategoryState> = _categoriesState.asStateFlow()
 
     // Variables para recipes
-    private val _recipeState = mutableStateOf(RecipeState())
-    val recipesState: State<RecipeState> = _recipeState
+    /*private val _recipeState = mutableStateOf(RecipeState())
+    val recipesState: State<RecipeState> = _recipeState*/
 
     //Llamada al context del categoryRepository
     private val categoryRepository = CategoryRepository(dao, apiService, context)
@@ -53,7 +53,7 @@ class MainViewModel(
         , val error: String? = null
     )
 
-    private fun fetchRecipes(idMeal: String) {
+    /*private fun fetchRecipes(idMeal: String) {
         viewModelScope.launch {
             try {
                 val response = recipeService.getRecipes(idMeal)
@@ -82,6 +82,6 @@ class MainViewModel(
         val loading: Boolean = true,
         val list: List<MealRecipe> = emptyList(), // Cambiado a MealRecipe
         val error: String? = null
-    )
+    )*/
 
 }

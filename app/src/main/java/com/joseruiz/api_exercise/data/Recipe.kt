@@ -1,11 +1,14 @@
 package com.joseruiz.api_exercise.data
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 data class RecipesResponse(
     val meals: List<MealRecipe>?
 )
-
+@Entity(tableName = "MealRecipe")
 data class MealRecipe(
-    val idMeal: String,
+    @PrimaryKey val idMeal: String, // PrimaryKey para identificar la receta
     val strMeal: String,
     val strDrinkAlternate: String?,
     val strCategory: String,
